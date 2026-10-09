@@ -1,0 +1,4 @@
+interface:
+  display_name: "SCOP Development"
+  short_description: "Scoped SCOP development, backend rules, and validation"
+  default_prompt: "Use $scop-development to review or implement this SCOP change and verify its behavior."
