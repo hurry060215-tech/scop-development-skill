@@ -1,6 +1,6 @@
 # SCOP Development Skill
 
-A Codex skill for developing, fixing, and reviewing the **scop** R package.
+A Codex skill for developing, fixing, and reviewing the [scop](https://github.com/mengxu98/scop) R package.
 
 It covers API compatibility, optional R backends, Python environments, documentation, testing, and package validation. Apply the guidance to the task at hand; current user and repository instructions take precedence.
 
