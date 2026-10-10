@@ -16,6 +16,8 @@ Documentation-only tasks must not change function implementations or package ver
 - Continue work within existing task authorization across follow-ups. Ask only when missing information cannot be reliably inferred and materially changes correctness, goals, or scope; continue independent work while waiting. This skill does not itself authorize installs, unrelated overwrites, version bumps, commits, pushes, or publishing. Silence and tool availability are not authorization.
 - Reuse one workflow when multiple skills apply. Do not copy the user's raw specification or this skill into the R package or change `.gitignore` to accommodate it. Maintaining/publishing this standalone skill is a separate task.
 
+Prefer the smallest direct implementation that satisfies the established contract. Validate at real boundaries, reuse established invariants internally, and avoid speculative compatibility, repeated checks, and silent fallback paths. See the implementation reference for the concrete limits.
+
 ## Assign responsibility from source
 
 | Package | Responsibility |

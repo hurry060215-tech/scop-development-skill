@@ -12,14 +12,14 @@
 
 | Change | Required evidence |
 | --- | --- |
-| Documentation/API help | Generate and parse Rd, check parameters, links and rendered help, confirm unchanged function bodies, verify relevant examples in an appropriate environment |
-| R behavior | Relevant testthat tests, empty/singleton/NA/invalid input boundaries, structural invariants |
+| Documentation/API help | For roxygen edits, regenerate and parse Rd; check affected contracts, links, and rendering. Keep function bodies unchanged in documentation-only work. Run new/changed executable examples; prose-only edits do not require a full backend environment |
+| R behavior | Relevant testthat tests and affected structural invariants; cover empty/singleton/NA/invalid inputs where the changed contract makes them meaningful |
 | Resource preparation/dispatch | First initialization, cache hit, invalidation, and equivalence of shared and independent entry points |
 | C++/native/parallel | Recompile; numerical assertions in a fresh R process; check platform compatibility and disclose untested platforms |
-| Algorithm migration/backend | Fixed-version official-reference numerical comparisons, end-to-end smoke test, recorded acceptance metrics |
+| Algorithm migration or backend numerical behavior | Fixed-version official-reference comparisons for affected calculations, end-to-end smoke test, recorded acceptance metrics |
 | Skill/specification itself | Check code references, parameter naming, links, and rule consistency; do not initialize an R environment in a Markdown-only skill repository |
 
-Do not use brittle wall-clock limits in unit tests. Mocks use actual upstream formals; verify argument forwarding with a real-backend minimal comparison. For optional-backend work, prepare at least one designated environment with known versions and run the key numerical assertions there. Ordinary optional tests may skip unavailable dependencies; critical acceptance cannot be reported as passed on skips. If installation is unauthorized or unavailable, report blocked acceptance instead of installing silently.
+Choose checks for changed behavior rather than the presence of a backend name in a file. Do not use brittle wall-clock limits in unit tests. Mocks use actual upstream formals; changes to argument forwarding require a real-backend minimal comparison. For backend execution, preprocessing, numerical output, or write-back changes, use at least one designated environment with known versions and run the affected key assertions there. Prose, labels, and error-message-only changes use focused checks unless they alter control flow or error semantics; they do not automatically require full backend provisioning. Ordinary optional tests may skip unavailable dependencies; critical acceptance cannot be reported as passed on skips. If installation is unauthorized or unavailable, report blocked acceptance instead of installing silently.
 
 Package-specific exceptions:
 
