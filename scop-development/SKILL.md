@@ -1,11 +1,13 @@
 ---
 name: scop-development
-description: Develop, repair, or review the scop R package with scoped API changes, runtime-optional backends, synchronized documentation, and behavioral validation. Use for SCOP source and cross-package integration work, not ordinary analysis using an installed package.
+description: Develop, repair, or review the scop R package with scoped API changes, runtime-optional backends, renv environment governance, synchronized documentation, and behavioral validation. Use for SCOP source and cross-package integration work, not ordinary analysis using an installed package.
 ---
 
 # SCOP development
 
 Use this skill as a development and review reference. Adopt relevant guidance according to the concrete task and feedback; do not mechanically apply every clause or initiate repository-wide cleanup. Current user instructions and applicable repository instructions take precedence. Algorithm migration guidance applies only to the corresponding requested task.
+
+Documentation-only tasks must not change function implementations or package versions. Apply common rules to the maintained R ecosystem only when that package is in scope; package-specific exceptions stay with their named package.
 
 ## Establish scope and contracts
 
@@ -18,17 +20,19 @@ Use this skill as a development and review reference. Adopt relevant guidance ac
 
 | Package | Responsibility |
 | --- | --- |
-| thisutils | Generic matrix, statistical, numerical, execution, and runtime tools |
+| thisutils | Generic matrix, statistical, numerical, execution, and runtime thread tools |
 | thisplot | Generic plotting and layout |
 | thistemplate | pkgdown themes and templates |
 | inferCSN | Core network inference and related feature selection |
 | multiCSN | Multi-omics networks, evaluation, ranking, and state analysis |
-| scop | Single-cell object adaptation, analysis entry points, result write-back |
+| scop | Single-cell/spatial omics object adaptation, analysis entry points, result write-back |
 
 Verify actual source, dependencies, and callers; names alone do not demonstrate completed migration. Reuse lower-level computation and plotting; SCOP prepares inputs and assembles outputs. Keep Seurat, gene/cell, and manuscript logic out of generic utilities. Migration preserves algorithms, preprocessing, and result contracts. Cross-package changes check exports, imports, native registration, direct callers, analyses, and articles. Maintained upstream forks, including monocle, preserve API/object systems, attribution, and licenses.
 
 ## Read only applicable guidance
 
+- For R development environment setup, restore, dependency changes, and lockfile handoff, read [environment.md](references/environment.md). Follow existing renv workflows; adopt or restore environments when the task needs it, and keep pak optional. Do not force environment migration or dependency upgrades for unrelated changes.
+- For algorithm migration or performance work, read [migration.md](references/migration.md); do not apply it to ordinary repairs.
 - For implementation, public API/help, repository assets, and session-state changes, read [implementation.md](references/implementation.md).
 - For optional R backends, Python branches, examples, and workers, read [backends.md](references/backends.md).
 - For formatting, generated files, validation, and code handoff, read [validation.md](references/validation.md).

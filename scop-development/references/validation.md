@@ -2,11 +2,30 @@
 
 ## Synchronize the scoped change
 
-1. Edit sources and direct callers. Clean obsolete references for intentionally retired interfaces. Check exports/imports and native registration across packages.
+1. Edit sources and direct callers. For documentation-only tasks, confirm zero function-body changes and do not change versions. Clean obsolete references for intentionally retired interfaces. Check exports/imports and native registration across packages.
 2. After R changes, run `styler::style_file()` on changed R source and tests using package configuration. Do not add styler to runtime dependencies. Use `style_pkg()` only on explicit request after checking the whole working-tree scope.
 3. Regenerate C++ export changes with `Rcpp::compileAttributes()`; roxygen changes with `devtools::document()`. Never hand-edit or separately format generated `man/`, `NAMESPACE`, or Rcpp files. Exclude unrelated generated changes while preserving pre-existing work.
-4. After formatting, parse and run relevant behavioral verification; check stale references, help links, and `git diff --check`. Regression tests exercise substantive failures with small deterministic inputs, not implementation mirrors. Verify actual behavior of new public APIs.
+4. For an adopted renv environment when consistency affects acceptance, run `renv::status()`, resolve relevant drift, and report unrelated differences; do not require a full environment rebuild for every task. Follow [environment.md](environment.md). After formatting, parse and run relevant behavioral verification; check stale references, help links, and `git diff --check`. Regression tests exercise substantive failures with small deterministic inputs, not implementation mirrors. Verify actual behavior of new public APIs.
 5. Do not incidentally change dependency minimum versions. DESCRIPTION Version/Date changes require explicit version-bump authorization; a feature, fix, commit, or publication request does not imply it. NEWS updates go under the top `# <package> (development version)` section. Reorganize into a release only on an explicit version/release task.
+
+## Minimum validation by change type
+
+| Change | Required evidence |
+| --- | --- |
+| Documentation/API help | Generate and parse Rd, check parameters, links and rendered help, confirm unchanged function bodies, verify relevant examples in an appropriate environment |
+| R behavior | Relevant testthat tests, empty/singleton/NA/invalid input boundaries, structural invariants |
+| Resource preparation/dispatch | First initialization, cache hit, invalidation, and equivalence of shared and independent entry points |
+| C++/native/parallel | Recompile; numerical assertions in a fresh R process; check platform compatibility and disclose untested platforms |
+| Algorithm migration/backend | Fixed-version official-reference numerical comparisons, end-to-end smoke test, recorded acceptance metrics |
+| Skill/specification itself | Check code references, parameter naming, links, and rule consistency; do not initialize an R environment in a Markdown-only skill repository |
+
+Do not use brittle wall-clock limits in unit tests. Mocks use actual upstream formals; verify argument forwarding with a real-backend minimal comparison. For optional-backend work, prepare at least one designated environment with known versions and run the key numerical assertions there. Ordinary optional tests may skip unavailable dependencies; critical acceptance cannot be reported as passed on skips. If installation is unauthorized or unavailable, report blocked acceptance instead of installing silently.
+
+Package-specific exceptions:
+
+- **thisplot:** do not add tests at present; render and inspect isolated plotting cases.
+- **thistemplate:** build and preview affected pkgdown pages for template/static-resource changes; do not impose numerical acceptance when algorithms are unchanged.
+- **scop:** prefer built-in pancreas data, raw counts, and clear grouping for analysis/plot examples. Keep CI `--no-examples`; validate optional environments separately using the existing `.github/workflows/optional-backends.yaml` when present, without inventing a workflow or claiming it was run.
 
 ## SCOP optional-backend checks
 
@@ -50,4 +69,4 @@ For other changes, select checks proportionate to the change and repository requ
 
 ## Handoff
 
-Report changed behavior, checks and actual outcomes, and remaining limitations. Keep isolated validation evidence out of package commits. Inspect the exact staged files before an authorized commit. Verify remote commit/PR state after authorized publication; report pending CI separately from passed local checks.
+Report scope, scientific-result impact, platform/species coverage, checks and actual pass/fail/skip/unverified outcomes, and remaining limitations. Split independently deliverable lower-level refactors and business features into separate PRs; deliver lower-level packages before upper-level callers in cross-package work. Keep isolated validation evidence out of package commits. Inspect the exact staged files before an authorized commit. Verify remote commit/PR state after authorized publication; report pending CI separately from passed local checks.
